@@ -1,0 +1,12 @@
+html {
+	background-color: beige;
+}
+
+#rect {
+	height: 17px;
+	width: 100px;
+	top: 10%;
+	left: 50%;	
+	background-color: red;
+	position: fixed;
+}
