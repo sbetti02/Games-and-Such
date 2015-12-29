@@ -2,6 +2,20 @@ html {
 	background-color: beige;
 }
 
+#reset_button {
+	top: 20%;
+	left: 2%;
+	height: 5%;
+	color: yellow;
+	background-color: grey;
+	font-size: 24px;
+	font-weight: bold;
+	padding: 3px;
+	position: fixed;
+	border-radius: 5px;
+}
+
+
 #play {
 	top: 27%;
 	left: 44.5%;
@@ -38,7 +52,7 @@ html {
 
 #instructions {
 	top: 65%;
-	left: 40.5%;
+	left: 25%;
 	height: 5%;
 	color: #FFCC33;
 	background-color: grey;
@@ -72,7 +86,7 @@ html {
 
 #credits {
 	top: 80%;
-	left: 43.2%;
+	left: 42.5%;
 	height: 5%;
 	color: #FFCC33;
 	background-color: grey;
@@ -104,11 +118,107 @@ html {
 	border-style: dashed;
 }
 
+#settings {
+	top: 65%;
+	left: 55%;
+	height: 5%;
+	color: #FFCC33;
+	background-color: grey;
+	font-size: 24px;
+	font-weight: bold;
+	padding: .5em;
+	padding-left: 2em;
+	padding-right: 2em;
+	position: fixed;
+	border-style: solid;
+	border-radius: 5px;
+}
+
 #back {
 	top: 70%;
-	left: 45%;
+	left: 44%;
 	height: 5%;
 	color: yellow;
+	background-color: grey;
+	font-size: 24px;
+	font-weight: bold;
+	padding: .5em;
+	padding-left: 2em;
+	padding-right: 2em;
+	position: fixed;
+	border-style: solid;
+	border-radius: 5px;
+}
+
+#play1 {
+	top: 25%;
+	left: 30%;
+	height: 5%;
+	color: #FFCC33;
+	background-color: red;
+	font-size: 24px;
+	font-weight: bold;
+	padding: .5em;
+	padding-left: 2em;
+	padding-right: 2em;
+	position: fixed;
+	border-style: solid;
+	border-radius: 5px;
+}
+
+#easy {
+	top: 40%;
+	left: 20%;
+	height: 5%;
+	color: #FFCC33;
+	background-color: turquoise;
+	font-size: 24px;
+	font-weight: bold;
+	padding: .5em;
+	padding-left: 1em;
+	padding-right: 1em;
+	position: fixed;
+	border-style: solid;
+	border-radius: 5px;
+}
+
+#medium {
+	top: 40%;
+	left: 32%;
+	height: 5%;
+	color: #FFCC33;
+	background-color: grey;
+	font-size: 24px;
+	font-weight: bold;
+	padding: .5em;
+	padding-left: 1em;
+	padding-right: 1em;
+	position: fixed;
+	border-style: solid;
+	border-radius: 5px;
+}
+
+#hard {
+	top: 40%;
+	left: 47%;
+	height: 5%;
+	color: #FFCC33;
+	background-color: grey;
+	font-size: 24px;
+	font-weight: bold;
+	padding: .5em;
+	padding-left: 1em;
+	padding-right: 1em;
+	position: fixed;
+	border-style: solid;
+	border-radius: 5px;
+}
+
+#play2 {
+	top: 25%;
+	left: 55%;
+	height: 5%;
+	color: #FFCC33;
 	background-color: grey;
 	font-size: 24px;
 	font-weight: bold;
@@ -187,19 +297,6 @@ html {
 	top: 70%;
 	left: 50%;
 	position: fixed;
-}
-
-#reset_button {
-	top: 20%;
-	left: 2%;
-	height: 5%;
-	color: yellow;
-	background-color: grey;
-	font-size: 24px;
-	font-weight: bold;
-	padding: 3px;
-	position: fixed;
-	border-radius: 5px;
 }
 
 #gameover {
