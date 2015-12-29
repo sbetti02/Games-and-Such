@@ -6,77 +6,63 @@
 	var D_KEY = 68;
 	var score1 = 0;
 	var score2 = 0;
+	var resetgame;
+	var clickbutton = 0;
 
 	$(document).ready(function() {
 // TODO:
 	// fix reset button
-	// make the deflection movement more intricate
+	// fix hit issues on paddle2
 	// Make an AI for 1 player mode
 	// Allow player to select keys to play with?
 	// Make a cooler background design?
-		$('#paddle2').hide();
-		$('#paddle').hide();
-		$('#ball').hide();
-		$('#p1Score').hide();
-		$('#p2Score').hide();
-		$('#reset_button').hide();
-		$('#how_to').hide();
-		$('#back').hide();
-		$('#my_creds').hide();
-		$('#countdown').hide();
+
+		$('.gameplay').hide();
+		$('.info_pages').hide();
 
 		$('#instructions').click(function() {
 			$('#how_to').show();
-			$('#instructions').hide();
-			$('#play').hide();
-			$('#welcome_sign').hide();
 			$('#back').show();
-			$('#credits').hide();
+			$('.start_screen').hide();
 		})
 
 		$('#credits').click(function() {
 			$('#my_creds').show();
-			$('#instructions').hide();
-			$('#play').hide();
-			$('#welcome_sign').hide();
 			$('#back').show();
-			$('#credits').hide();
+			$('.start_screen').hide();
 		})
 
 		$('#back').click(function() {
-			$('#how_to').hide();
-			$('#instructions').show();
-			$('#play').show();
-			$('#welcome_sign').show();
-			$('#back').hide();
-			$('#credits').show();
-			$('#my_creds').hide();
+			$('.info_pages').hide();
+			$('.start_screen').show();
 		})
 
 		$('#play').click(function() {
-
-			$('#play').hide();
-			$('#welcome_sign').hide();
-			$('#instructions').hide();
-			$('#credits').hide();
-			$('#paddle2').show();
-			$('#paddle').show();
-			$('#ball').show();
-			$('#p1Score').show();
-			$('#p2Score').show();
-			$('#reset_button').show();
-
-			$('#countdown').show();
-			//$('#countdown')/*.delay(1000)*/.empty().append('2')//.delay(1000).empty().append('1').delay(1000).empty();
+			$('.start_screen').hide();
+			$('.gameplay').show();
 			var counter = 3;
 			function timer () {
+									//console.log($('#ball').offset());
+									//console.log("U");		
+				$('#countdown').show();		
+
 				countInterval = setInterval(function() {
+				//console.log("YO" + counter);
+				//console.log($('#ball').offset());	
+				var start_height = $(window).height()*.48;
+				var mid_width = $(window).width()/2;
+				$('#ball').offset({top: start_height, left: mid_width});			
+
 				counter--; 				
-				if (counter < 0) {return;}
+				if (counter < 0) {counter = 3; return;}
 				if (counter == 0) {
 					$('#countdown').empty().append(3).hide(); 
-					go();
+					resetgame = 0;
+					//go();
+					counter = 3;
 					clearInterval(countInterval);
+					//countInterval = 0;
+					go();
 					//return;
 				} 
 				$('#countdown').empty().append(counter); 
@@ -85,6 +71,10 @@
 			timer();
 
 			function go() {
+
+
+					//console.log($('#ball').offset());				
+
 
 				var screenwidth = $(window).width() - $('#paddle').width();
 				var ball_y = $('#ball').position().top;
@@ -101,10 +91,10 @@
 				})
 				
 
-				function animate(moveleft, movedown) {
+				function animate(moveleft, movedown, x_speed, y_speed) {
 
-					x_movement = moveleft? "-=4": "+=4";
-					y_movement = movedown? "+=4": "-=4";
+					x_movement = moveleft? "-="+x_speed : "+="+x_speed;
+					y_movement = movedown? "+="+y_speed : "-="+y_speed;
 					if (keysDown[65]) { // letter 'a'
 						if (0 < $('#paddle2').position().left) {
 							$('#paddle2').animate({
@@ -158,7 +148,7 @@
 								$('#p1Score').empty().append(score1);
 								$('#p2Score').empty().append(score2);
 								if (score1 < 10 && score2 < 10) {
-									reset();
+									resetting();
 								}
 								else {
 									var winner;
@@ -173,17 +163,45 @@
 								return; // end sequence if hits top or bottom
 							}					
 
+							var impact_location;
+
 							if ( (ball_y > paddlePos.top - 1.5*paddleHeight) && (ball_y < paddlePos.top) && (ball_x >  paddlePos.left) && 
 								(ball_x < paddlePos.left + paddleWidth)){
+								impact_location = ball_x - paddlePos.left;
+								console.log("impact location = " + impact_location);
+								pct_paddle_hit = impact_location/paddleWidth;
+								console.log("pct paddle hit = " +  pct_paddle_hit);
+								if (pct_paddle_hit > 0.5) {
+									x_speed = (pct_paddle_hit-0.5)*13;
+									moveleft = false;
+								}
+								else {
+									x_speed = (0.5-pct_paddle_hit)*13;
+									moveleft = true;
+								}
 								movedown = false; // if hits paddle on bottom, send upwards
 							}
 							if ( (ball_y < paddlePos2.top + paddleHeight2) && (ball_y > paddlePos2.top) && (ball_x >  paddlePos2.left) && 
 								(ball_x < paddlePos2.left + paddleWidth2)){
+								impact_location = ball_x - paddlePos2.left;
+								console.log("impact2 location = " + impact_location);
+								pct_paddle_hit = impact_location/paddleWidth2;
+								console.log("pct paddle hit = " + pct_paddle_hit);
+								if (pct_paddle_hit > 0.5) {
+									x_speed = (pct_paddle_hit-0.5)*13;
+									moveleft = false;
+								}
+								else {
+									x_speed = (0.5-pct_paddle_hit)*13;
+									moveleft = true;
+								}
 								movedown = true; // if hits top paddle, send downwards
 							}
-							animate(moveleft,movedown); // call recursively
-							console.log("x movement = " + x_movement);
-							console.log("y movement = " + y_movement);
+							//console.log(resetgame);
+							if (resetgame == 1) {console.log("here"); return;}
+							animate(moveleft,movedown, x_speed, y_speed); // call recursively
+							//console.log("x movement = " + x_movement);
+							//console.log("y movement = " + y_movement);
 
 						}
 					);
@@ -205,16 +223,12 @@
 						startleft = false;
 					}
 				}
-				//setTimeout(startpos, 2000);
-				//setTimeout(startpos(), 2000);
-				//setTimeout(animate(startleft, startup), 2000); // call the function the first time
 				startpos();
-				//timer();
-				animate(startleft, startup); // call the function the first time
+				animate(startleft, startup, 0, 6); // call the function the first time
 
-				function reset() {
-					x_movement = 0;
-					y_movement = 0;
+				function resetting() {
+					//x_movement = 0;
+					//y_movement = 0;
 					var heightdist = $('#paddle').position().height;
 					var heightdist2 = $('#paddle2').position().height;
 					var pos_left = $(window).width()*.46;
@@ -224,13 +238,29 @@
 					$('#paddle').offset({top: heightdist, left: pos_left});
 					$('#paddle2').offset({top: heightdist2, left: pos_left});
 					$('#ball').offset({top: start_height, left: mid_width}).delay(2000);
-					startpos();
-					animate(startleft, startup);
+					//console.log("Im here");
+					//console.log($('#ball').offset());
+					if (resetgame == 0) {
+						startpos();
+						animate(startleft, startup, 0, 6);
+					}
 				}
 
+
+				clickbutton = 0;
 				$('#reset_button').click(function() { // TODO: make this call reset correctly, not just restart the page
 					//location.reload();
-					reset();
+					//reset();
+					clickbutton++;
+					if (clickbutton > 1) {return;}					
+					console.log("clicked " + clickbutton + " time(s)");
+					console.log("asdf");
+					resetgame = 1;
+					//p1Score = 0;
+					//p2Score = 0;
+					resetting();
+					console.log($('#ball').offset());		
+					timer();
 				})
 			}
 
