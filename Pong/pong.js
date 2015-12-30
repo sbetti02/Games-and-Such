@@ -11,7 +11,6 @@
 
 	$(document).ready(function() {
 // TODO:
-	// fix reset button
 	// Allow to pick paddle/ball color
 	// Allow player to select keys to play with?
 	// Make a cooler background design?
@@ -103,8 +102,8 @@
 				countInterval = setInterval(function() {
 				//console.log("YO" + counter);
 				//console.log($('#ball').offset());	
-				var start_height = $(window).height()*.48;
-				var mid_width = $(window).width()/2;
+				//var start_height = $(window).height()*.48;
+				//var mid_width = $(window).width()/2;
 				//$('#ball').offset({top: start_height, left: mid_width});
 
 				counter--; 				
@@ -382,9 +381,11 @@
 				//console.log($('#ball').offset());
 				if (resetgame == 0) {
 					$('#ball').offset({top: start_height, left: mid_width}).delay(2000);
+					//if (resetgame == 1) {return;}
 					startpos();
 					//animate(startleft, startup, 0, game_speed);
-					go();
+					//if (resetgame == 0) {
+					go();//}
 				}
 		}
 		$('#restart').click(function() {
@@ -405,6 +406,7 @@
 			$('#p2Score').empty().append(score2);
 			$('#gameover').empty();
 			$('.gameover').hide();
+			$('#ball').clearQueue();
 			resetgame = 1;
 			resetting();
 			$('.gameplay').hide();
