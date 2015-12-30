@@ -12,15 +12,17 @@
 	$(document).ready(function() {
 // TODO:
 	// fix reset button
-	// Make an AI for 1 player mode
 	// Allow to pick paddle/ball color
 	// Allow player to select keys to play with?
 	// Make a cooler background design?
+	// pause button
+	// Play Again? button
 
 		$('.gameplay').hide();
 		$('.info_pages').hide();
 		$('.settings').hide();
 		$('.level').hide();
+		$('.gameover').hide();
 
 		$('#instructions').click(function() {
 			$('#how_to').show();
@@ -61,44 +63,55 @@
 			$('.level').hide();
 		})
 		var paddle_speed = 4;
+		var game_speed = 4;
 		$('#easy').click(function() {
-			paddle_speed = 4;
+			paddle_speed = 6;
+			game_speed = 6;
 			$(this).css("background", "turquoise");
 			$('#medium').css("background", "grey");
 			$('#hard').css("background", "grey");
 		})
 		$('#medium').click(function() {
 			paddle_speed = 7;
+			game_speed = 10;
 			$(this).css("background", "green");
 			$('#easy').css("background", "grey");
 			$('#hard').css("background", "grey");
 		})
 		$('#hard').click(function() {
 			paddle_speed = 10;
+			game_speed = 15;
 			$(this).css("background", "red");
 			$('#easy').css("background", "grey");
 			$('#medium').css("background", "grey");
 		})
+		var exit_clicked = false;
 		$('#play').click(function() {
 			$('.start_screen').hide();
 			$('.gameplay').show();
 			var counter = 3;
 			function timer () {
 									//console.log($('#ball').offset());
-									//console.log("U");		
+									//console.log("U");	
+				exit_clicked = false;	
 				$('#countdown').show();		
+				//$('#exit').show();
+				expected_hit = $('#paddle2').width()/2;
+				
+				resetting();			
 
 				countInterval = setInterval(function() {
 				//console.log("YO" + counter);
 				//console.log($('#ball').offset());	
 				var start_height = $(window).height()*.48;
 				var mid_width = $(window).width()/2;
-				$('#ball').offset({top: start_height, left: mid_width});			
+				//$('#ball').offset({top: start_height, left: mid_width});
 
 				counter--; 				
 				if (counter < 0) {counter = 3; return;}
 				if (counter == 0) {
 					$('#countdown').empty().append(3).hide(); 
+					$('#exit').show();
 					resetgame = 0;
 					//go();
 					counter = 3;
@@ -117,7 +130,8 @@
 		function go() {
 
 
-					//console.log($('#ball').offset());				
+					//console.log($('#ball').offset());	
+			if (exit_clicked) {return;}			
 
 
 			var screenwidth = $(window).width() - $('#paddle').width();
@@ -136,7 +150,7 @@
 				
 
 			function animate(moveleft, movedown, x_speed, y_speed) {
-
+				if (exit_clicked) {return;}
 				x_movement = moveleft? "-="+x_speed : "+="+x_speed;
 				y_movement = movedown? "+="+y_speed : "-="+y_speed;
 				if (!single_player) {
@@ -156,28 +170,39 @@
 					}
 				}
 				if (single_player) {
-					if (Math.abs(ball_x - ($('#paddle2').position().left + ($('#paddle2').width()/2))) >= 7) {
-						if (ball_x < $('#paddle2').position().left + ($('#paddle2').width()/2)) {
-							$('#paddle2').animate({
-								'left': '-='+paddle_speed}, 2
-							);
+					console.log("expected_hit = " + expected_hit);
+					if (Math.abs(ball_x - ($('#paddle2').position().left + expected_hit/*($('#paddle2').width()/2)*/)) >= 7) {
+						//if ((0 < $('#paddle2').position().left) && (screenwidth > $('#paddle2').position().left)) {
+						if (ball_x < $('#paddle2').position().left + expected_hit/*($('#paddle2').width()/2)*/) {
+							if (0 < $('#paddle2').position().left) {
+								$('#paddle2').animate({
+									'left': '-='+paddle_speed}, 2
+								);
+							}
 						}
-						if (ball_x > $('#paddle2').position().left + ($('#paddle2').width()/2)) {
-							$('#paddle2').animate({
-								'left': '+='+paddle_speed}, 2
-							);
+						if (ball_x > $('#paddle2').position().left + expected_hit/*($('#paddle2').width()/2)*/) {
+							if (screenwidth > $('#paddle2').position().left) {
+								$('#paddle2').animate({
+									'left': '+='+paddle_speed}, 2
+								);
+							}
 						}
-					} else {
-						if (ball_x < $('#paddle2').position().left + ($('#paddle2').width()/2)) {
-							$('#paddle2').animate({
-								'left': '-=1'}, 2
-							);
+					} else if (Math.abs(ball_x - ($('#paddle2').position().left + expected_hit/*($('#paddle2').width()/2)*/)) > 2){
+						if (ball_x < $('#paddle2').position().left + expected_hit/*($('#paddle2').width()/2)*/) {
+							if (0 < $('#paddle2').position().left) {
+								$('#paddle2').animate({
+									'left': '-=1'}, 2
+								);
+							}
 						}
-						if (ball_x > $('#paddle2').position().left + ($('#paddle2').width()/2)) {
+						if (ball_x > $('#paddle2').position().left + expected_hit/*($('#paddle2').width()/2)*/) {
+							if (screenwidth > $('#paddle2').position().left) {
 							$('#paddle2').animate({
 								'left': '+=1'}, 2
 							);
+							}
 						}
+					//}
 					}
 				}
 				if (keysDown[37]) { // left arrow
@@ -206,7 +231,7 @@
 						var paddleHeight2 = $('#paddle2').height();				
 						var paddleWidth = $('#paddle').width();
 						var paddleHeight= $('#paddle').height();
-
+						if (exit_clicked) {return;}
 						if (ball_x < 0 || ($(window).width()- $('#ball').width()) < ball_x){
 							moveleft = !moveleft; // flip the ball movement if hits wall
 						}
@@ -231,6 +256,7 @@
 									winner = 2;
 								}
 								$('#gameover').append("PLAYER " + winner + " WINS!");
+								$('.gameover').show();
 							}
 							return; // end sequence if hits top or bottom
 						}					
@@ -243,6 +269,8 @@
 							console.log("impact location = " + impact_location);
 							pct_paddle_hit = impact_location/paddleWidth;
 							console.log("pct paddle hit = " +  pct_paddle_hit);
+							//expected_hit = Math.ceil(Math.random() * $('#paddle2').width);
+							
 							if (pct_paddle_hit > 0.5) {
 								x_speed = (pct_paddle_hit-0.5)*13;
 								moveleft = false;
@@ -250,6 +278,12 @@
 							else {
 								x_speed = (0.5-pct_paddle_hit)*13;
 								moveleft = true;
+							}
+							if (game_speed == 10) {
+								x_speed = x_speed*1.5;
+							}
+							if (game_speed == 15) {
+								x_speed = x_speed*2;
 							}
 							movedown = false; // if hits paddle on bottom, send upwards
 						}
@@ -259,6 +293,9 @@
 							console.log("impact2 location = " + impact_location);
 							pct_paddle_hit = impact_location/paddleWidth2;
 							console.log("pct paddle hit = " + pct_paddle_hit);
+							console.log("and here = " + expected_hit);
+							expected_hit = Math.ceil(Math.random() * $('#paddle2').width());
+							console.log("here = " + expected_hit);
 							if (pct_paddle_hit > 0.5) {
 								x_speed = (pct_paddle_hit-0.5)*13;
 								moveleft = false;
@@ -268,9 +305,16 @@
 								moveleft = true;
 							}
 							movedown = true; // if hits top paddle, send downwards
+							if (game_speed == 10) {
+								x_speed = x_speed*1.5;
+							}
+							if (game_speed == 15) {
+								x_speed = x_speed*2;
+							}
 						}
+						
 						//console.log(resetgame);
-						if (resetgame == 1) {console.log("here"); return;}
+						//if (resetgame == 1) {console.log("here"); return;}
 						animate(moveleft,movedown, x_speed, y_speed); // call recursively
 						//console.log("x movement = " + x_movement);
 						//console.log("y movement = " + y_movement);
@@ -279,48 +323,15 @@
 				);
 
 			}
-			var startup;
-			var startleft;
-			function startpos() {
-				if (Math.ceil(Math.random() * 2) == 1) {
-					startup = true;
-				}
-				else {
-					startup = false;
-				}
-				if (Math.ceil(Math.random() * 2) == 1) {
-					startleft = true;
-				}
-				else {
-					startleft = false;
-				}
-			}
+			
 			startpos();
-			animate(startleft, startup, 0, 6); // call the function the first time
+			animate(startleft, startup, 0, game_speed); // call the function the first time
 
-			function resetting() {
-				//x_movement = 0;
-				//y_movement = 0;
-				var heightdist = $('#paddle').position().height;
-				var heightdist2 = $('#paddle2').position().height;
-				var pos_left = $(window).width()*.46;
-				var mid_width = $(window).width()/2;
-				var start_height = $(window).height()*.48;
-				leftdist = $('#paddle').position().width;
-				$('#paddle').offset({top: heightdist, left: pos_left});
-				$('#paddle2').offset({top: heightdist2, left: pos_left});
-				$('#ball').offset({top: start_height, left: mid_width}).delay(2000);
-				//console.log("Im here");
-				//console.log($('#ball').offset());
-				if (resetgame == 0) {
-					startpos();
-					animate(startleft, startup, 0, 6);
-				}
-			}
+			
 
 
 			clickbutton = 0;
-			$('#reset_button').click(function() { // TODO: make this call reset correctly, not just restart the page
+			/*$('#reset_button').click(function() { // TODO: make this call reset correctly, not just restart the page
 				//location.reload();
 				//reset();
 				clickbutton++;
@@ -333,8 +344,73 @@
 				resetting();
 				console.log($('#ball').offset());		
 				timer();
-			})
+			})*/
 		}
+		var startup;
+		var startleft;
+		function startpos() {
+			if (Math.ceil(Math.random() * 2) == 1) {
+				startup = true;
+			}
+			else {
+				startup = false;
+			}
+			if (Math.ceil(Math.random() * 2) == 1) {
+				startleft = true;
+			}
+			else {
+				startleft = false;
+			}
+		}
+		function resetting() {
+				//x_movement = 0;
+				//y_movement = 0;
+				var heightdist = $('#paddle').position().height;
+				var heightdist2 = $('#paddle2').position().height;
+				var pos_left = $(window).width()*.46;
+				var mid_width = $(window).width()/2;
+				var start_height = $(window).height()*.48;
+				leftdist = $('#paddle').position().width;
+				$('#paddle').offset({top: heightdist, left: pos_left});
+				$('#paddle2').offset({top: heightdist2, left: pos_left});
+				if (resetgame == 1) {
+					$('#ball').offset({top: start_height, left: mid_width});
+				}
+				
+				expected_hit = $('#paddle2').width()/2;
+				//console.log("Im here");
+				//console.log($('#ball').offset());
+				if (resetgame == 0) {
+					$('#ball').offset({top: start_height, left: mid_width}).delay(2000);
+					startpos();
+					//animate(startleft, startup, 0, game_speed);
+					go();
+				}
+		}
+		$('#restart').click(function() {
+			score1 = 0;
+			score2 = 0;
+			$('#p1Score').empty().append(score1);
+			$('#p2Score').empty().append(score2);
+			$('#gameover').empty();
+			$('.gameover').hide();
+			resetting();
+			timer();
+		})
+		$('#exit').click(function() {
+			score1 = 0;
+			score2 = 0;
+			exit_clicked = true;
+			$('#p1Score').empty().append(score1);
+			$('#p2Score').empty().append(score2);
+			$('#gameover').empty();
+			$('.gameover').hide();
+			resetgame = 1;
+			resetting();
+			$('.gameplay').hide();
+			$('.start_screen').show();
+			//timer();
+		})
 
 		
 

@@ -2,7 +2,7 @@ html {
 	background-color: beige;
 }
 
-#reset_button {
+#restart {
 	top: 20%;
 	left: 2%;
 	height: 5%;
@@ -11,6 +11,21 @@ html {
 	font-size: 24px;
 	font-weight: bold;
 	padding: 3px;
+	position: fixed;
+	border-radius: 5px;
+}
+
+#exit {
+	top: 40%;
+	left: 7%;
+	height: 5%;
+	color: yellow;
+	background-color: grey;
+	font-size: 24px;
+	font-weight: bold;
+	padding: 3px;
+	padding-left: 1em;
+	padding-right: 1em;
 	position: fixed;
 	border-radius: 5px;
 }
