@@ -14,9 +14,18 @@ $(document).ready(function() {
 // Allow player to select keys to play with?
 // Make a cooler background design?
 // pause button
-// Play Again? button
 
 	var paddleWidth2 = $('#paddle2').width();
+	var screenwidth = $(window).width() - $('#paddle').width();
+	var ball_y = $('#ball').position().top;
+	var ball_x =  $('#ball').position().left;
+	var x_movement;
+	var y_movement;
+	var ball_width = $('#ball').width();
+	var ball_height = $('#ball').height();
+	var paddleHeight2 = $('#paddle2').height();				
+	var paddleWidth = $('#paddle').width();
+	var paddleHeight= $('#paddle').height();
 
 	$('.gameplay').hide();
 	$('.info_pages').hide();
@@ -87,9 +96,13 @@ $(document).ready(function() {
 		$('#medium').css("background", "grey");
 	})
 	var exit_clicked = false;
+	var player_speed = 7;
 	$('#play').click(function() {
 		$('.start_screen').hide();
 		$('.gameplay').show();
+		if (game_speed == 15) {
+			player_speed = 9;
+		}
 		var counter = 3;
 		function timer () {
 			exit_clicked = false;	
@@ -111,184 +124,170 @@ $(document).ready(function() {
 			}, 1000)};
 		timer();
 	})
-
+	$('html').keyup(function(e){
+		keysDown[e.which] = false;
+	})
+	$('html').keydown(function (e) { // stay pressed
+		keysDown[e.which] = true;
+	})
 	function go() {
-		if (exit_clicked) {return;}			
-		var screenwidth = $(window).width() - $('#paddle').width();
-		var ball_y = $('#ball').position().top;
-		var ball_x =  $('#ball').position().left;
-		var x_movement;
-		var y_movement;
-		var player_speed = 7;
-		if (game_speed == 15) {
-			player_speed = 9;
-		}
-		// stay pressed
-		$('html').keyup(function(e){
-			keysDown[e.which] = false;
-		})
-
-		$('html').keydown(function (e) {
-			keysDown[e.which] = true;
-		})
-			
-
-		function animate(moveleft, movedown, x_speed, y_speed) {
-			if (exit_clicked) {return;}
-			x_movement = moveleft? "-="+x_speed : "+="+x_speed;
-			y_movement = movedown? "+="+y_speed : "-="+y_speed;
-			var paddlePos = $('#paddle').position();
-			var paddlePos2 = $('#paddle2').position();
-			if (!single_player) {
-				if (keysDown[65]) { // letter 'a'
-					if (0 < $('#paddle2').position().left) {
-						$('#paddle2').animate({
-							'left': '-='+player_speed}, 5 // move left
-						);
-					}
-				}
-				if (keysDown[68]) { // letter 'd'
-					if (screenwidth > $('#paddle2').position().left) {
-						$('#paddle2').animate({
-							'left': '+='+player_speed}, 5 // move right
-						);
-					}
-				}
-			}
-			if (single_player) {
-				if (Math.abs(ball_x - (paddlePos2.left + expected_hit)) >= 7) {
-					if (ball_x < paddlePos2.left + expected_hit) {
-						if (0 < paddlePos2.left) {
-							$('#paddle2').animate({
-								'left': '-='+paddle_speed}, 2
-							);
-						}
-					}
-					if (ball_x > paddlePos2.left + expected_hit) {
-						if (screenwidth > paddlePos2.left) {
-							$('#paddle2').animate({
-								'left': '+='+paddle_speed}, 2
-							);
-						}
-					}
-				} else if (Math.abs(ball_x - (paddlePos2.left + expected_hit)) > 2){
-					if (ball_x < paddlePos2.left + expected_hit) {
-						if (0 < $('#paddle2').position().left) {
-							$('#paddle2').animate({
-								'left': '-=1'}, 2
-							);
-						}
-					}
-					if (ball_x > paddlePos2.left + expected_hit) {
-						if (screenwidth > paddlePos2.left) {
-							$('#paddle2').animate({
-								'left': '+=1'}, 2
-							);
-						}
-					}
-				}
-			}
-			if (keysDown[37]) { // left arrow
-				if (0 < paddlePos.left) {
-					$('#paddle').animate({
+		if (exit_clicked) {return;}	
+		startpos();
+		animate(startleft, startup, 0, game_speed); // call the function the first time	
+	}
+	function animate(moveleft, movedown, x_speed, y_speed) {
+		if (exit_clicked) {return;}
+		x_movement = moveleft? "-="+x_speed : "+="+x_speed;
+		y_movement = movedown? "+="+y_speed : "-="+y_speed;
+		var paddlePos = $('#paddle').position();
+		var paddlePos2 = $('#paddle2').position();
+		if (!single_player) {
+			if (keysDown[65]) { // letter 'a'
+				if (0 < $('#paddle2').position().left) {
+					$('#paddle2').animate({
 						'left': '-='+player_speed}, 5 // move left
 					);
 				}
 			}
-			if (keysDown[39]) { // right arrow
-				if (screenwidth > paddlePos.left) {
-					$('#paddle').animate({
+			if (keysDown[68]) { // letter 'd'
+				if (screenwidth > $('#paddle2').position().left) {
+					$('#paddle2').animate({
 						'left': '+='+player_speed}, 5 // move right
 					);
 				}
 			}
-			$('#ball').animate({ // animate the ball movement
-					
-				'left': x_movement, 'top': y_movement}, 13, "swing",function(){
-					ball_y = $('#ball').position().top;
-					ball_x =  $('#ball').position().left;
-					var ball_width = $('#ball').width();
-					var ball_height = $('#ball').height();
-					var paddleHeight2 = $('#paddle2').height();				
-					var paddleWidth = $('#paddle').width();
-					var paddleHeight= $('#paddle').height();
-					if (exit_clicked) {return;}
-					if (ball_x < 0 || ($(window).width() - ball_width) < ball_x){
-						moveleft = !moveleft; // flip the ball movement if hits wall
-					}
-					if (ball_y < 0 || ($(window).height() - ball_height) < ball_y){
-						if (ball_y < 0) {
-							score2++;
-						}
-						else {
-							score1++;
-						}
-						$('#p1Score').empty().append(score1);
-						$('#p2Score').empty().append(score2);
-						if (score1 < 10 && score2 < 10) {
-							resetting();
-						}
-						else {
-							var winner;
-							if (score2 == 10) {
-								winner = 1;
-							}
-							else {
-								winner = 2;
-							}
-							$('#gameover').append("PLAYER " + winner + " WINS!");
-							$('.gameover').show();
-						}
-						return; // end sequence if hits top or bottom
-					}					
-					var impact_location;
-					if ( (ball_y > paddlePos.top - 1.5*paddleHeight) && (ball_y < paddlePos.top) && (ball_x >  (paddlePos.left - ball_width)) && 
-						(ball_x < paddlePos.left + paddleWidth)){
-						impact_location = ball_x - paddlePos.left;
-						pct_paddle_hit = impact_location/paddleWidth;
-						if (pct_paddle_hit > 0.5) {
-							x_speed = (pct_paddle_hit-0.5)*13;
-							moveleft = false;
-						}
-						else {
-							x_speed = (0.5-pct_paddle_hit)*13;
-							moveleft = true;
-						}
-						if (game_speed == 10) {
-							x_speed = x_speed*1.5;
-						}
-						if (game_speed == 15) {
-							x_speed = x_speed*2;
-						}
-						movedown = false; // if hits paddle on bottom, send upwards
-					}
-					if ( (ball_y < paddlePos2.top + paddleHeight2) && (ball_y > paddlePos2.top) && (ball_x >  (paddlePos2.left - ball_width)) && 
-						(ball_x < paddlePos2.left + paddleWidth2)){
-						impact_location = ball_x - paddlePos2.left;
-						pct_paddle_hit = impact_location/paddleWidth2;
-						expected_hit = Math.ceil(Math.random() * paddleWidth2);
-						if (pct_paddle_hit > 0.5) {
-							x_speed = (pct_paddle_hit-0.5)*13;
-							moveleft = false;
-						}
-						else {
-							x_speed = (0.5-pct_paddle_hit)*13;
-							moveleft = true;
-						}
-						movedown = true; // if hits top paddle, send downwards
-						if (game_speed == 10) {
-							x_speed = x_speed*1.5;
-						}
-						if (game_speed == 15) {
-							x_speed = x_speed*2;
-						}
-					}
-					animate(moveleft,movedown, x_speed, y_speed); // call recursively
-				}
-			);
 		}
-		startpos();
-		animate(startleft, startup, 0, game_speed); // call the function the first time
+		if (single_player) {
+			if (Math.abs(ball_x - (paddlePos2.left + expected_hit)) >= 7) {
+				if (ball_x < paddlePos2.left + expected_hit) {
+					if (0 < paddlePos2.left) {
+						$('#paddle2').animate({
+							'left': '-='+paddle_speed}, 2
+						);
+					}
+				}
+				if (ball_x > paddlePos2.left + expected_hit) {
+					if (screenwidth > paddlePos2.left) {
+						$('#paddle2').animate({
+							'left': '+='+paddle_speed}, 2
+						);
+					}
+				}
+			} else if (Math.abs(ball_x - (paddlePos2.left + expected_hit)) > 2){
+				if (ball_x < paddlePos2.left + expected_hit) {
+					if (0 < $('#paddle2').position().left) {
+						$('#paddle2').animate({
+							'left': '-=1'}, 2
+						);
+					}
+				}
+				if (ball_x > paddlePos2.left + expected_hit) {
+					if (screenwidth > paddlePos2.left) {
+						$('#paddle2').animate({
+							'left': '+=1'}, 2
+						);
+					}
+				}
+			}
+		}
+		if (keysDown[37]) { // left arrow
+			if (0 < paddlePos.left) {
+				$('#paddle').animate({
+					'left': '-='+player_speed}, 5 // move left
+				);
+			}
+		}
+		if (keysDown[39]) { // right arrow
+			if (screenwidth > paddlePos.left) {
+				$('#paddle').animate({
+					'left': '+='+player_speed}, 5 // move right
+				);
+			}
+		}
+		$('#ball').animate({ // animate the ball movement
+				
+			'left': x_movement, 'top': y_movement}, 13, "swing",function(){
+				ball_y = $('#ball').position().top;
+				ball_x =  $('#ball').position().left;
+				if (exit_clicked) {return;}
+				if (ball_x < 0 || ($(window).width() - ball_width) < ball_x){
+					moveleft = !moveleft; // flip the ball movement if hits wall
+				}
+				if (ball_y < 0 || ($(window).height() - ball_height) < ball_y){
+					if (ball_y < 0) {
+						score2++;
+					}
+					else {
+						score1++;
+					}
+					$('#p1Score').empty().append(score1);
+					$('#p2Score').empty().append(score2);
+					if (score1 < 10 && score2 < 10) {
+						resetting();
+					}
+					else {
+						var winner;
+						if (score2 == 10) {
+							winner = 1;
+						}
+						else {
+							winner = 2;
+						}
+						if (single_player && score1 == 10) {
+							$('#gameover').append("COMPUTER WINS!");
+						}
+						else {
+							$('#gameover').append("PLAYER " + winner + " WINS!");
+						}
+						$('.gameover').show();
+					}
+					return; // end sequence if hits top or bottom
+				}					
+				var impact_location;
+				if ( (ball_y > paddlePos.top - 1.5*paddleHeight) && (ball_y < paddlePos.top) && (ball_x >  (paddlePos.left - ball_width)) && 
+					(ball_x < paddlePos.left + paddleWidth)){
+					impact_location = ball_x - paddlePos.left;
+					pct_paddle_hit = impact_location/paddleWidth;
+					if (pct_paddle_hit > 0.5) {
+						x_speed = (pct_paddle_hit-0.5)*13;
+						moveleft = false;
+					}
+					else {
+						x_speed = (0.5-pct_paddle_hit)*13;
+						moveleft = true;
+					}
+					if (game_speed == 10) {
+						x_speed = x_speed*1.5;
+					}
+					if (game_speed == 15) {
+						x_speed = x_speed*2;
+					}
+					movedown = false; // if hits paddle on bottom, send upwards
+				}
+				if ( (ball_y < paddlePos2.top + paddleHeight2) && (ball_y > paddlePos2.top) && (ball_x >  (paddlePos2.left - ball_width)) && 
+					(ball_x < paddlePos2.left + paddleWidth2)){
+					impact_location = ball_x - paddlePos2.left;
+					pct_paddle_hit = impact_location/paddleWidth2;
+					expected_hit = Math.ceil(Math.random() * paddleWidth2);
+					if (pct_paddle_hit > 0.5) {
+						x_speed = (pct_paddle_hit-0.5)*13;
+						moveleft = false;
+					}
+					else {
+						x_speed = (0.5-pct_paddle_hit)*13;
+						moveleft = true;
+					}
+					movedown = true; // if hits top paddle, send downwards
+					if (game_speed == 10) {
+						x_speed = x_speed*1.5;
+					}
+					if (game_speed == 15) {
+						x_speed = x_speed*2;
+					}
+				}
+				animate(moveleft,movedown, x_speed, y_speed); // call recursively
+			}
+		);
 	}
 	var startup;
 	var startleft;
