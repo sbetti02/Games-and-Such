@@ -2,11 +2,9 @@ html {
 	background-color: beige;
 }
 
-#rect {
+.rects {
 	height: 17px;
-	width: 100px;
-	top: 10%;
-	left: 50%;	
+	width: 5.5%;
 	background-color: red;
 	position: fixed;
 }
