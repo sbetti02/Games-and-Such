@@ -72,8 +72,8 @@ $(document).ready(function() {
 		$('#play1').css("background", "grey");
 		$('.level').hide();
 	})
-	var paddle_speed = 4;
-	var game_speed = 4;
+	var paddle_speed = 6;
+	var game_speed = 6;
 	$('#easy').click(function() {
 		paddle_speed = 6;
 		game_speed = 6;
@@ -97,12 +97,15 @@ $(document).ready(function() {
 	})
 	var exit_clicked = false;
 	var player_speed = 7;
+	var paused = false;
+	var playing = false;
 	$('#play').click(function() {
 		$('.start_screen').hide();
 		$('.gameplay').show();
 		if (game_speed == 15) {
 			player_speed = 9;
 		}
+		var paused = false;
 		var counter = 3;
 		function timer () {
 			exit_clicked = false;	
@@ -130,13 +133,35 @@ $(document).ready(function() {
 	$('html').keydown(function (e) { // stay pressed
 		keysDown[e.which] = true;
 	})
+	$('html').keypress(function (e) {
+		if (e.which == 112) {
+			if (!paused) {
+				paused = true;
+			}
+			else {
+				console.log("here");
+				paused = false;
+				if (playing) {
+					animate(moving_left, moving_down, speed_x, speed_y);
+				}
+			}
+		}
+
+	})
 	function go() {
 		if (exit_clicked) {return;}	
+		paused = false;
 		startpos();
 		animate(startleft, startup, 0, game_speed); // call the function the first time	
 	}
+	var moving_left;
+	var moving_down;
+	var speed_x;
+	var speed_y;
 	function animate(moveleft, movedown, x_speed, y_speed) {
+		playing = true;
 		if (exit_clicked) {return;}
+		if (paused) {return;}
 		x_movement = moveleft? "-="+x_speed : "+="+x_speed;
 		y_movement = movedown? "+="+y_speed : "-="+y_speed;
 		var paddlePos = $('#paddle').position();
@@ -210,6 +235,7 @@ $(document).ready(function() {
 				ball_y = $('#ball').position().top;
 				ball_x =  $('#ball').position().left;
 				if (exit_clicked) {return;}
+				if (paused) {return;}
 				if (ball_x < 0 || ($(window).width() - ball_width) < ball_x){
 					moveleft = !moveleft; // flip the ball movement if hits wall
 				}
@@ -285,7 +311,11 @@ $(document).ready(function() {
 						x_speed = x_speed*2;
 					}
 				}
-				animate(moveleft,movedown, x_speed, y_speed); // call recursively
+				moving_left = moveleft;
+				moving_down = movedown;
+				speed_x = x_speed;
+				speed_y = y_speed;
+				animate(moveleft, movedown, x_speed, y_speed); // call recursively
 			}
 		);
 	}
@@ -306,6 +336,7 @@ $(document).ready(function() {
 		}
 	}
 	function resetting() {
+			playing = false;
 			var heightdist = $('#paddle').position().height;
 			var heightdist2 = $('#paddle2').position().height;
 			var pos_left = $(window).width()*.46;
