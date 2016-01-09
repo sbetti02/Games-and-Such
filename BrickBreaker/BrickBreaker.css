@@ -8,3 +8,13 @@ html {
 	background-color: red;
 	position: fixed;
 }
+
+#paddle {
+	height: 2%;
+	width: 9%;
+	top: 92%;
+	left: 46%;
+	position: fixed;
+	background-color: red;
+	box-shadow: 0 0 10px black;
+}

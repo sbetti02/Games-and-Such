@@ -11,12 +11,30 @@ $(document).ready(function() {
 			$('<div/>', {
 				'id':'rect' + i + j,
 				'class':'rects'
-				//prop: {left: '50%'}
 			}).appendTo('body');
 			$('#rect'+i+j).css("left", space_left+'%');
 			$('#rect'+i+j).css("top", space_down+'px');
 		}
 	}
+
+	$('html').keydown(function (e) { // stay pressed
+		if (e.which == 37) {
+			if (0 < $('#paddle').position().left) {
+				$('#paddle').animate({
+					'left': '-=30'}, 5
+				);
+			}
+		}
+		if (e.which == 39) {
+			if (($(window).width()-$('#paddle').width()) > $('#paddle').position().left) {
+				$('#paddle').animate({
+					'left': '+=30'}, 5
+				);
+			}
+		}
+	})
+
+	
 	/*console.log(rect.css("left"));
 	rect2 = $('#rect2');
 	rect2.css("left", "60%");
