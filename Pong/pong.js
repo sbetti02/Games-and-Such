@@ -13,7 +13,6 @@ $(document).ready(function() {
 // Allow to pick paddle/ball color
 // Allow player to select keys to play with?
 // Make a cooler background design?
-// pause button
 
 	var paddleWidth2 = $('#paddle2').width();
 	var screenwidth = $(window).width() - $('#paddle').width();
@@ -26,6 +25,13 @@ $(document).ready(function() {
 	var paddleHeight2 = $('#paddle2').height();				
 	var paddleWidth = $('#paddle').width();
 	var paddleHeight= $('#paddle').height();
+	$(window).resize(function() {
+		screenwidth = $(window).width() - $('#paddle').width();
+		paddleWidth = $('#paddle').width();
+		paddleWidth2 = $('#paddle2').width();
+		circle_width = $(window).height()/5;
+		$('#centercircle').css("width", circle_width+'px');
+	})
 
 	$('.gameplay').hide();
 	$('.info_pages').hide();
@@ -348,7 +354,6 @@ $(document).ready(function() {
 			if (resetgame == 1) {
 				$('#ball').offset({top: start_height, left: mid_width});
 			}
-			
 			expected_hit = paddleWidth2/2;
 			if (resetgame == 0) {
 				$('#ball').offset({top: start_height, left: mid_width}).delay(2000);
