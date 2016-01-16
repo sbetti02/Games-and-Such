@@ -16,23 +16,29 @@ $(document).ready(function() {
 			$('#rect'+i+j).css("top", space_down+'px');
 		}
 	}
+	var left_pressed = false;
+	var right_pressed = false;
 	$('html').keydown(function (e) { // stay pressed
 		if (e.which == 37) {
-			if (0 < $('#paddle').position().left) {
-				$('#paddle').animate({
-					'left': '-=30'}, 5
-				);
-			}
+			left_pressed = true;
+
 		}
 		if (e.which == 39) {
-			if (($(window).width()-$('#paddle').width()) > $('#paddle').position().left) {
-				$('#paddle').animate({
-					'left': '+=30'}, 5
-				);
-			}
+			right_pressed = true;
+		}
+		if (left_pressed && right_pressed) { // make more fluid, go in new direction pressed
+			left_pressed = false;
 		}
 	})
-	var count = 100;
+	$('html').keyup(function(e) {
+		if (e.which == 37) {
+			left_pressed = false;
+		}
+		if (e.which == 39) {
+			right_pressed = false;
+		}
+	})
+
 	function animate(movedown, moveleft, x_vel) {
 		var y_speed;
 		var x_movement;
@@ -49,6 +55,21 @@ $(document).ready(function() {
 		else {
 			y_speed = "-=5";
 		}
+		if (left_pressed) {
+			if (0 < $('#paddle').position().left) {
+				$('#paddle').animate({
+					'left': '-=5'}, 5
+				);
+			}
+		}
+		if (right_pressed) {
+			if (($(window).width()-$('#paddle').width()) > $('#paddle').position().left) {
+				$('#paddle').animate({
+					'left': '+=5'}, 5
+				);
+			}
+		}
+
 		$('#ball').animate({
 			'top': y_speed, 'left': x_movement}, 5, "swing", function() {
 				if (($('#ball').position().top > ($('#paddle').position().top - 1.5*$('#paddle').height()) && 

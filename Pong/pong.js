@@ -145,7 +145,6 @@ $(document).ready(function() {
 				paused = true;
 			}
 			else {
-				console.log("here");
 				paused = false;
 				if (playing) {
 					animate(moving_left, moving_down, speed_x, speed_y);
