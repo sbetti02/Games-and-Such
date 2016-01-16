@@ -5,7 +5,7 @@ html {
 .rects {
 	height: 17px;
 	width: 5.5%;
-	background-color: red;
+	background-color: black;
 	position: fixed;
 }
 
@@ -17,4 +17,14 @@ html {
 	position: fixed;
 	background-color: red;
 	box-shadow: 0 0 10px black;
+}
+
+#ball {
+	height: 25px;
+	width: 25px;
+	background-color: blue;
+	left: 50%;
+	top: 48%;
+	border-radius: 13px;
+	position: fixed;
 }
