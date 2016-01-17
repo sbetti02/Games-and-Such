@@ -1,19 +1,19 @@
 $(document).ready(function() {
-	//var rect = {};
-	//rect = $('#rect');
-	//rects = [];
-	//rects.push(rect);
+	var rects = [];
 	window_height = $(window).height();
+	var rect_num = 0;
 	for (i = 1; i < 12; i++) {
 		for (j = 0; j < 4; j++) {
 			space_down = (window_height*.1) + (j*50);
 			space_left = i*8;
 			$('<div/>', {
-				'id':'rect' + i + j,
+				'id':'rect' + rect_num,
 				'class':'rects'
 			}).appendTo('body');
-			$('#rect'+i+j).css("left", space_left+'%');
-			$('#rect'+i+j).css("top", space_down+'px');
+			$('#rect'+rect_num).css("left", space_left+'%');
+			$('#rect'+rect_num).css("top", space_down+'px');
+			rects.push($('#rect'+rect_num).position());
+			rect_num++;
 		}
 	}
 	var left_pressed = false;
@@ -72,11 +72,13 @@ $(document).ready(function() {
 
 		$('#ball').animate({
 			'top': y_speed, 'left': x_movement}, 5, "swing", function() {
-				if (($('#ball').position().top > ($('#paddle').position().top - 1.5*$('#paddle').height()) && 
-					$('#ball').position().left > $('#paddle').position().left && 
-					$('#ball').position().left < ($('#paddle').position().left + $('#paddle').width()))) {
+				var ball_pos = $('#ball').position();
+				var paddle_pos = $('#paddle').position();
+				if ((ball_pos.top > (paddle_pos.top - 1.5*$('#paddle').height()) && 
+					ball_pos.left > paddle_pos.left && 
+					ball_pos.left < (paddle_pos.left + $('#paddle').width()))) {
 					movedown = false;
-					var impact_location = $('#ball').position().left-$('#paddle').position().left;
+					var impact_location = ball_pos.left-paddle_pos.left;
 					var pct_hit = impact_location/$('#paddle').width();
 					if (pct_hit>.5) {
 						x_speed = (pct_hit-.5)*10;
@@ -87,16 +89,48 @@ $(document).ready(function() {
 						moveleft = true;
 					}
 				}
-				if ($('#ball').position().top < 0) {
+				if (ball_pos.top < 0) {
 					movedown = true;
 				}
-				if ($('#ball').position().left < 0) {
+				if (ball_pos.left < 0) {
 					moveleft = false;
 				}
-				if ($('#ball').position().left > $(window).width() - $('#ball').width()) {
+				if (ball_pos.left > $(window).width() - $('#ball').width()) {
 					moveleft = true;
 				}
-				if ($('#ball').position().top > ($(window).height()-$('#ball').height())) {
+				for (k=0; k<rects.length; k++) {
+					if (((ball_pos.left+$('#ball').width()) > rects[k].left) && 
+						ball_pos.left < (rects[k].left + $('#rect0').width()) &&
+						(ball_pos.top < rects[k].top+$('#rect0').height()) &&
+						(ball_pos.top > rects[k].top))
+					{
+						if ($('#rect'+k).css('display') != 'none' ){
+							movedown=true;
+							$('#rect'+k).hide();
+						}
+					}
+					if (((ball_pos.left+$('#ball').width()) > rects[k].left) && 
+						ball_pos.left < (rects[k].left + $('#rect0').width()) &&
+						(ball_pos.top > rects[k].top-5) &&
+						(ball_pos.top < rects[k].top))
+					{
+						if ($('#rect'+k).css('display') != 'none' ){
+							movedown=false;
+							$('#rect'+k).hide();
+						}
+					}
+					if ((ball_pos.top > rects[k].top) &&
+						ball_pos.top < rects[k].top-$('#rect0').height() &&
+						ball_pos.left < rects[k].left+5 &&
+						ball_pos.left > rects[k].left )  
+					{
+						if ($('#rect'+k).css('display') != 'none') {
+							moveleft = true;
+							$('#rect'+k).hide();
+						}
+					}
+				}
+				if (ball_pos.top > ($(window).height()-$('#ball').height())) {
 					return;
 				}
 				animate(movedown, moveleft, x_speed);
@@ -104,15 +138,4 @@ $(document).ready(function() {
 		);
 	}
 	animate(true,true,0);
-
-
-	/*console.log(rect.css("left"));
-	rect2 = $('#rect2');
-	rect2.css("left", "60%");
-	console.log(rect.css("left"));
-	rects.push(rect2); 
-	$('<div/>', {
-	    'id':'rect2',
-	    'class':'rects',
-	})*/
 })
