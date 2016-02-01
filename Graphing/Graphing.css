@@ -1,0 +1,45 @@
+html {
+	background-color: black;
+}
+
+#horiz_line {
+	background-color: white;
+	height: 5px;
+	left: 0px;
+	top: 300px;
+	width: 600px;
+	position: fixed;
+}
+
+#vert_line {
+	background-color: white;
+	top: 0px;
+	height: 600px;
+	width: 5px;
+	left: 300px;
+	position: fixed;
+}
+
+.horiz_ticks {
+	background-color: white;
+	height: 2px;
+	width: 15px;
+	left: 295px;
+	position: fixed;
+	color: teal;
+	text-align: center;
+	font-weight: bold;
+	font-size: 21px;
+}
+
+.vert_ticks {
+	background-color: white;
+	width: 2px;
+	height: 15px;
+	top: 295px;
+	position: fixed;
+	color: teal;
+	text-align: left;
+	font-weight: bold;
+	font-size: 21px;
+}
