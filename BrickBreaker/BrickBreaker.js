@@ -74,8 +74,9 @@ $(document).ready(function() {
 			'top': y_speed, 'left': x_movement}, 5, "swing", function() {
 				var ball_pos = $('#ball').position();
 				var paddle_pos = $('#paddle').position();
-				if ((ball_pos.top > (paddle_pos.top - 1.5*$('#paddle').height()) && 
-					ball_pos.left > paddle_pos.left && 
+				if ((ball_pos.top > (paddle_pos.top - 1.5*$('#paddle').height()) &&
+					ball_pos.top < (paddle_pos.top + $('#paddle').height()) &&
+					ball_pos.left+$('#ball').width() > paddle_pos.left && 
 					ball_pos.left < (paddle_pos.left + $('#paddle').width()))) {
 					movedown = false;
 					var impact_location = ball_pos.left-paddle_pos.left;
@@ -102,7 +103,7 @@ $(document).ready(function() {
 					if (((ball_pos.left+$('#ball').width()) > rects[k].left) && 
 						ball_pos.left < (rects[k].left + $('#rect0').width()) &&
 						(ball_pos.top < rects[k].top+$('#rect0').height()) &&
-						(ball_pos.top > rects[k].top))
+						(ball_pos.top > rects[k].top)) // bottom of rects
 					{
 						if ($('#rect'+k).css('display') != 'none' ){
 							movedown=true;
@@ -111,15 +112,15 @@ $(document).ready(function() {
 					}
 					if (((ball_pos.left+$('#ball').width()) > rects[k].left) && 
 						ball_pos.left < (rects[k].left + $('#rect0').width()) &&
-						(ball_pos.top > rects[k].top-5) &&
-						(ball_pos.top < rects[k].top))
+						(ball_pos.top > rects[k].top-$('#rect0').height()-3) &&
+						(ball_pos.top < rects[k].top) && movedown==true) // top of rects
 					{
 						if ($('#rect'+k).css('display') != 'none' ){
 							movedown=false;
 							$('#rect'+k).hide();
 						}
 					}
-					if ((ball_pos.top > rects[k].top) &&
+					/*if ((ball_pos.top > rects[k].top) &&
 						ball_pos.top < rects[k].top-$('#rect0').height() &&
 						ball_pos.left < rects[k].left+5 &&
 						ball_pos.left > rects[k].left )  
@@ -128,7 +129,7 @@ $(document).ready(function() {
 							moveleft = true;
 							$('#rect'+k).hide();
 						}
-					}
+					}*/
 				}
 				if (ball_pos.top > ($(window).height()-$('#ball').height())) {
 					return;

@@ -279,6 +279,10 @@ $(document).ready(function() {
 					(ball_x < paddlePos.left + paddleWidth)){
 					impact_location = ball_x - paddlePos.left;
 					pct_paddle_hit = impact_location/paddleWidth;
+					//audio = new Audio();
+					//audio.src = "paddle_hit.mp3";
+					//audio.play();
+					//$.playSound('paddle_hit.mp3');
 					if (pct_paddle_hit > 0.5) {
 						x_speed = (pct_paddle_hit-0.5)*13;
 						moveleft = false;
