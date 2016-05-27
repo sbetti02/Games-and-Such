@@ -2,7 +2,11 @@ html {
 	background-color: beige;
 }
 
-#reset_button {
+.gameover {
+	position: fixed;
+}
+
+#restart {
 	top: 20%;
 	left: 2%;
 	height: 5%;
@@ -11,16 +15,25 @@ html {
 	font-size: 24px;
 	font-weight: bold;
 	padding: 3px;
-	position: fixed;
+	border-radius: 5px;
+}
+
+#exit {
+	top: 40%;
+	left: 7%;
+	height: 5%;
+	color: yellow;
+	background-color: grey;
+	font-size: 24px;
+	font-weight: bold;
+	padding: 3px;
+	padding-left: 1em;
+	padding-right: 1em;
 	border-radius: 5px;
 }
 
 
-#play {
-	top: 27%;
-	left: 44.5%;
-	height: 5%;
-	color: #FF6600;
+.start_screen {
 	background-color: grey;
 	font-size: 24px;
 	font-weight: bold;
@@ -32,22 +45,24 @@ html {
 	border-radius: 5px;
 }
 
+#play {
+	top: 27%;
+	left: 44.5%;
+	height: 5%;
+	color: #FF6600;
+}
+
 #welcome_sign {
 	top: 5%;
 	left: 40%;
 	height: 5%;
 	color: #FFCC33;
-	background-color: grey;
-	font-size: 24px;
-	font-weight: bold;
 	padding: 1em;
-	padding-left: 2em;
-	padding-right: 2em;
 	padding-bottom: 2em;
-	position: fixed;
+	padding-right: 2em;
+	padding-left: 2em;
 	text-align: center;
 	border-style: double;
-	border-radius: 5px;
 }
 
 #instructions {
@@ -55,6 +70,23 @@ html {
 	left: 25%;
 	height: 5%;
 	color: #FFCC33;
+}
+
+#settings {
+	top: 65%;
+	left: 55%;
+	height: 5%;
+	color: #FFCC33;
+}
+
+#credits {
+	top: 80%;
+	left: 42.5%;
+	height: 5%;
+	color: #FFCC33;
+}
+
+.info_pages {
 	background-color: grey;
 	font-size: 24px;
 	font-weight: bold;
@@ -68,36 +100,12 @@ html {
 
 #how_to {
 	top: 0%;
-	left: 25%;
+	left: 18%;
 	text-align: center;
 	height: 5%;
 	color: #FFCC33;
-	background-color: grey;
-	font-size: 24px;
-	font-weight: bold;
-	padding: .5em;
-	padding-left: 2em;
-	padding-right: 2em;
-	padding-bottom: 9.5em;
-	position: fixed;
+	padding-bottom: 12em;
 	border-style: dashed;
-	border-radius: 5px;
-}
-
-#credits {
-	top: 80%;
-	left: 42.5%;
-	height: 5%;
-	color: #FFCC33;
-	background-color: grey;
-	font-size: 24px;
-	font-weight: bold;
-	padding: .5em;
-	padding-left: 2em;
-	padding-right: 2em;
-	position: fixed;
-	border-style: solid;
-	border-radius: 5px;
 }
 
 #my_creds {
@@ -106,32 +114,8 @@ html {
 	text-align: center;
 	height: 5%;
 	color: #FFCC33;
-	background-color: grey;
-	font-size: 24px;
-	font-weight: bold;
-	padding: .5em;
-	padding-left: 2em;
-	padding-right: 2em;
 	padding-bottom: 5em;
-	position: fixed;
-	border-radius: 5px;
 	border-style: dashed;
-}
-
-#settings {
-	top: 65%;
-	left: 55%;
-	height: 5%;
-	color: #FFCC33;
-	background-color: grey;
-	font-size: 24px;
-	font-weight: bold;
-	padding: .5em;
-	padding-left: 2em;
-	padding-right: 2em;
-	position: fixed;
-	border-style: solid;
-	border-radius: 5px;
 }
 
 #back {
@@ -139,28 +123,15 @@ html {
 	left: 44%;
 	height: 5%;
 	color: yellow;
+}
+
+.level {
 	background-color: grey;
 	font-size: 24px;
 	font-weight: bold;
 	padding: .5em;
-	padding-left: 2em;
-	padding-right: 2em;
-	position: fixed;
-	border-style: solid;
-	border-radius: 5px;
-}
-
-#play1 {
-	top: 25%;
-	left: 30%;
-	height: 5%;
-	color: #FFCC33;
-	background-color: red;
-	font-size: 24px;
-	font-weight: bold;
-	padding: .5em;
-	padding-left: 2em;
-	padding-right: 2em;
+	padding-left: 1em;
+	padding-right: 1em;
 	position: fixed;
 	border-style: solid;
 	border-radius: 5px;
@@ -172,14 +143,6 @@ html {
 	height: 5%;
 	color: #FFCC33;
 	background-color: turquoise;
-	font-size: 24px;
-	font-weight: bold;
-	padding: .5em;
-	padding-left: 1em;
-	padding-right: 1em;
-	position: fixed;
-	border-style: solid;
-	border-radius: 5px;
 }
 
 #medium {
@@ -187,15 +150,6 @@ html {
 	left: 32%;
 	height: 5%;
 	color: #FFCC33;
-	background-color: grey;
-	font-size: 24px;
-	font-weight: bold;
-	padding: .5em;
-	padding-left: 1em;
-	padding-right: 1em;
-	position: fixed;
-	border-style: solid;
-	border-radius: 5px;
 }
 
 #hard {
@@ -203,23 +157,10 @@ html {
 	left: 47%;
 	height: 5%;
 	color: #FFCC33;
-	background-color: grey;
-	font-size: 24px;
-	font-weight: bold;
-	padding: .5em;
-	padding-left: 1em;
-	padding-right: 1em;
-	position: fixed;
-	border-style: solid;
-	border-radius: 5px;
 }
 
-#play2 {
+.settings {
 	top: 25%;
-	left: 55%;
-	height: 5%;
-	color: #FFCC33;
-	background-color: grey;
 	font-size: 24px;
 	font-weight: bold;
 	padding: .5em;
@@ -230,10 +171,24 @@ html {
 	border-radius: 5px;
 }
 
+#play1 {
+	left: 30%;
+	height: 5%;
+	color: #FFCC33;
+	background-color: red;
+}
+
+#play2 {
+	left: 55%;
+	height: 5%;
+	color: #FFCC33;
+	background-color: grey;
+}
+
 #centercircle {
 	top: 39.5%;
 	left: 45%;
-	width: 10%;
+	width: 130px;
 	height: 0;
 	padding-bottom: 10%;
 	border-radius: 50%;
@@ -251,8 +206,11 @@ html {
 	position: fixed;
 }
 
-#countdown {
+.gameplay {
 	position: fixed;
+}
+
+#countdown {
 	left: 49.5%;
 	top: 44%;
 	font-size: 70px;
@@ -265,7 +223,7 @@ html {
 	top: 92%;
 	left: 46%;	
 	background-color: red;
-	position: fixed;
+	box-shadow: 0 0 10px black;
 }
 
 #paddle2 {
@@ -274,14 +232,13 @@ html {
 	top: 4%;
 	left: 46%;	
 	background-color: black;
-	position: fixed;
+	box-shadow: 0 0 10px red;
 }
 
 #ball {
 	height: 25px;
 	width: 25px;
 	background-color: blue;
-	position: fixed;
 	left: 50%;
 	top: 48%;
 	border-radius: 13px;
@@ -290,17 +247,14 @@ html {
 #p1Score {
 	top: 20%;
 	left: 50%;
-	position: fixed;
 }
 
 #p2Score {
 	top: 70%;
 	left: 50%;
-	position: fixed;
 }
 
 #gameover {
 	top: 30%;
 	left: 41%;
-	position: fixed;
 }
