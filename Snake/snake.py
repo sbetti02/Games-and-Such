@@ -1,18 +1,32 @@
 import os
 #import sys
 import curses
+import time
 
 width = 25
 height = 30
 
-rows = [' '] * height
+#rows = [' '] * height
 columns = []
+tail = []
+head_x = width/2
+head_y = height/2
+tail_length = 4
 
-for j in range (0, width):
-	rows = [' ' for index in rows]
-	columns.append(rows)
+def createTail(size):
+	for i in range (1,size):
+		columns[width/2][height/2 + i] = '#' 
+		tail.append([width/2, height/2 + i])
 
-columns[width/2][height/2] = '^'
+def setup():
+	rows = [' '] * height
+	for j in range (0, width):
+		rows = [' ' for index in rows]
+		columns.append(rows)
+	columns[head_x][head_y] = '^'
+	createTail(tail_length + 1)
+
+
 
 def printboard():
 	os.system('clear')
@@ -26,16 +40,52 @@ def printboard():
 			else: print columns[col][row],
 		print '\n',
 
+def moveup():
+	global head_x
+	global head_y
+	head_y = head_y - 1
+	if (head_y == 0): head_y = height - 2
+	columns[head_x][head_y] = '^'
 
+def moveleft():
+	global head_x
+	global head_y
+	head_x = head_x - 1
+	if (head_x == 0): head_x = width - 2
+	columns[head_x][head_y] = '<'
+
+def moveright():
+	global head_x
+	global head_y
+	head_x = head_x + 1
+	if (head_x == width - 1): head_x = 1
+	columns[head_x][head_y] = '>'
+
+def movedown():
+	global head_x
+	global head_y
+	head_y = head_y + 1
+	if (head_y == height - 1): head_y = 1
+	columns[head_x][head_y] = 'v'
+
+setup()
 printboard()
-"""
-while(1):
+
+for i in range (1, 100):
+	time.sleep(0.1)
+	columns[tail[tail_length-1][0]][tail[tail_length-1][1]] = ' '
+	tail.pop()
+	tail.insert(0, [head_x, head_y])
+	columns[head_x][head_y] = '#'
+	if ((i / 10) % 2 == 0): moveright()
+	else: movedown()
+	printboard()
+
 	#a = sys.stdin.read(1)
-	a = curses.KEY_DOWN
-	print a
-	"""
+	#a = curses.KEY_DOWN
+	#print a
 
 
-"""
-def createTail(size):
-"""
+#psuedocode:
+#  if head = up, do stuff
+#  if head = down, do other stuff
