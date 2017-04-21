@@ -2,11 +2,12 @@ import os
 #import sys
 import curses
 import time
+import pygame
 
+pygame.init()
 width = 25
 height = 30
 
-#rows = [' '] * height
 columns = []
 tail = []
 head_x = width/2
@@ -25,8 +26,6 @@ def setup():
 		columns.append(rows)
 	columns[head_x][head_y] = '^'
 	createTail(tail_length + 1)
-
-
 
 def printboard():
 	os.system('clear')
@@ -70,6 +69,13 @@ def movedown():
 
 setup()
 printboard()
+"""
+while True:
+	eventlist =  (pygame.event.get())
+	print (eventlist[0] + '\n')
+	#if pygame.event.get() == pygame.K_DOWN:
+	#	print ("Hey whattap")
+"""
 
 for i in range (1, 100):
 	time.sleep(0.1)
@@ -81,10 +87,13 @@ for i in range (1, 100):
 	else: movedown()
 	printboard()
 
+
+#for event in pygame.event.get():
+#	if event.type == pygame.K_DOWN:
+#		print ("Hey whattap")
 	#a = sys.stdin.read(1)
 	#a = curses.KEY_DOWN
 	#print a
-
 
 #psuedocode:
 #  if head = up, do stuff
